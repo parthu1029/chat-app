@@ -39,4 +39,6 @@ model Message {
 
   receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
   receiverId Int
+  
+  @@index([senderId, receiverId])
 }
