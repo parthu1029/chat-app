@@ -22,6 +22,34 @@ app.use(morgan('dev')); // Logs incoming requests
 app.use('/api/auth', authRoutes);
 app.use('/api', messageRoutes);
 
+app.get("/", (req, res) => {
+    const collect = (basePath, router) => {
+        const routes = [];
+        const stack = router && router.stack ? router.stack : [];
+        stack.forEach((layer) => {
+            if (layer && layer.route && layer.route.path != null) {
+                const routePath = layer.route.path;
+                const methods = Object.keys(layer.route.methods || {}).map((m) => m.toUpperCase());
+                const middlewares = (layer.route.stack || [])
+                    .map((s) => s.name)
+                    .filter((n) => n && n !== 'bound dispatch');
+                const normalizedPath = routePath === '/' ? '' : routePath;
+                routes.push({ path: `${basePath}${normalizedPath}`, methods, middlewares });
+            }
+        });
+        return routes;
+    };
+
+    const routes = [
+        ...collect('/api/auth', authRoutes),
+        ...collect('/api', messageRoutes),
+    ];
+    res.send(`
+        <h1>Available Routes</h1>
+        <pre>${JSON.stringify(routes, null, 2)}</pre>
+    `);
+});
+
 // Global Middleware for 404 & Errors
 app.use(notFound);
 app.use(errorHandler);

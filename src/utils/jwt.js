@@ -1,15 +1,21 @@
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET;
+function getSecret() {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error('JWT_SECRET is not set');
+  }
+  return secret;
+}
 
 // Create token
 export function generateToken(payload) {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: '1hr' });
+  return jwt.sign(payload, getSecret(), { expiresIn: '1h' });
 }
 
 // Verify token
 export function verifyToken(token) {
-  return jwt.verify(token, JWT_SECRET);
+  return jwt.verify(token, getSecret());
 }
 
 

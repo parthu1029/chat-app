@@ -5,7 +5,7 @@ import prisma from '../config/db.js';
  */
 export const sendMessage = async (req, res) => {
   try {
-    const { senderId, recipientId, content } = req.body;
+    const { senderId, recipientId, content } = req.body || {};
 
     if (!senderId || !recipientId || !content) {
       return res.status(400).json({ message: 'senderId, recipientId, and content are required' });
@@ -32,7 +32,7 @@ export const sendMessage = async (req, res) => {
  */
 export const getMessages = async (req, res) => {
   try {
-    const { senderId, recipientId } = req.query;
+    const { senderId, recipientId } = req.query || {};
 
     if (!senderId || !recipientId) {
       return res.status(400).json({ message: 'senderId and recipientId are required' });

@@ -1,22 +1,25 @@
 import { register } from '../controllers/authController.js';
-import { hashPassword } from '../utils/hash';
-import prisma from '../config/db';
+import { hashPassword } from '../utils/hash.js';
+import prisma from '../config/db.js';
 import { generateToken } from '../utils/jwt.js';
 
 
-jest.mock('../config/db', () => ({
-  user: {
-    findUnique: jest.fn(),
-    create: jest.fn(),
+jest.mock('../config/db.js', () => ({
+  __esModule: true,
+  default: {
+    user: {
+      findUnique: jest.fn(),
+      create: jest.fn(),
+    },
   },
 }));
 
-jest.mock('../utils/hash', () => ({
+jest.mock('../utils/hash.js', () => ({
   hashPassword: jest.fn(),
   comparePassword: jest.fn(),
 }));
 
-jest.mock('../utils/jwt', () => ({
+jest.mock('../utils/jwt.js', () => ({
   generateToken: jest.fn(),
 }));
 

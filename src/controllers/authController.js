@@ -7,7 +7,10 @@ import { generateToken } from '../utils/jwt.js';
  */
 export const register = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password } = req.body || {};
+    if (!username || !email || !password) {
+      return res.status(400).json({ message: 'username, email, and password are required' });
+    }
 
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({
@@ -43,7 +46,10 @@ export const register = async (req, res) => {
  */
 export const login = async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, password } = req.body || {};
+    if (!username || !password) {
+      return res.status(400).json({ message: 'username and password are required' });
+    }
 
     // Find user by username
     const user = await prisma.user.findUnique({
